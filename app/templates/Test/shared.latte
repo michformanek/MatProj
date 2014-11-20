@@ -1,0 +1,28 @@
+{block content}
+
+<div class="login-panel panel panel-default">
+    <div class="panel-heading">
+        <h3 n:block=title class="panel-title">Sdílené testy</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Název testu</th>
+                    <th>Datum vytvoření</th>
+                    <th>Autor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $tests as $test}
+                    <tr>
+                        <td>{$test->name}</td>
+                        <td>{$test->created_at}</td>
+                        <td>{$test->user->fullname}</td>
+                    </tr>   
+                {/foreach}
+            </tbody>
+        </table>
+
+    </div>
+</div>

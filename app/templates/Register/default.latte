@@ -1,0 +1,32 @@
+{block content}
+
+<div class="col-md-6 col-md-offset-3">
+    <div class="login-panel panel panel-default">
+        <div class="panel-heading">
+            <h3 n:block=title class="panel-title">Zaregistrovat se</h3>
+        </div>
+        <div class="panel-body">
+            <form role="form" n:name=registerForm>
+                <fieldset>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Uživatelské jméno" name="username" type="text" autofocus=""  n:name=username>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Celé jméno" name="fullname" type="text" n:name=fullname>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="E-mail" name="email" type="email" n:name=email>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Heslo" name="password" type="password" value=""  n:name=password>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Heslo znovu" name="password2" type="password" value=""  n:name=password2>
+                    </div>
+                    <button class="btn btn-sm btn-success"  n:name=send>Zaregistrovat se</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <a n:href="Sign:in">Pokud už jste zaregistrovaní, můžete se přihlásit...</a>
+</div>

@@ -1,0 +1,13 @@
+/* 
+    Created on : 20.11.2014, 8:21:46
+    Author     : Michal Formánek
+*/
+
+body {
+  min-height: 2000px;
+  padding-top: 70px;
+}
+
+.navbar-static-top {
+  margin-bottom: 19px;
+}
