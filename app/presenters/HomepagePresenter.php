@@ -19,18 +19,39 @@ class HomepagePresenter extends BasePresenter {
     }
 
     public function renderDefault() {
-        $this->template->answers = $this->answers->findAll();
+        if (!isset($this->template->list)) {
+            $this->template->answers = $this->answers->findAll();
+        }
     }
 
-    protected function createComponentAnswerForm($name) {
+    public function handleUpdate($id) {
+        $this->template->list = $this->isAjax() ? array() : $this->getTheWholeList();
+        $this->template->list[$id] = 'Updated item';
+        $this->redrawControl('itemsContainer');
+    }
 
-        $form = new Form;
-        $odpovedi = $this->answers->findAll();
-        foreach ($odpovedi as $value) {
-            $form->addText($value->id, $value->text);
-        }
 
-        return $form;
+    public function handleDelete($answerId) {
+        $this->answers->delete($answerId);
+    }
+
+    protected function createComponentAnswerForm() {
+
+        return new Multiplier(function ($questionId) {
+            $form = new Form;
+            $form->getElementPrototype()->class('ajax');
+            $form->addText("text", "Text odpovědi");
+            $form->addHidden('question_id', $questionId);
+            $form->addSubmit("Pridat");
+            $form->onSuccess[] = $this->answerFormSucceeded;
+            return $form;
+        });
+    }
+
+    public function answerFormSucceeded($form) {
+        $values = $form->getValues();
+        $answer = $this->answers->add($values);
+        //$this->redirect('default');
     }
 
 }

@@ -25,5 +25,6 @@ services:
 	- App\Model\UserManager
 	- App\Model\Answers
 	- App\Model\Tests
+	- App\Model\Questions
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter

@@ -16,7 +16,10 @@
         <h3 class="panel-title">Obsah testu</h3>
     </div>
     <div class="panel-body">
-
+        {foreach $questions as $question}
+            <strong>{$question->text}</strong><br>
+            {control answers-$question->id}
+        {/foreach}
 
     </div>
 </div>

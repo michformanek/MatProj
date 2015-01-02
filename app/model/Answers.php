@@ -18,7 +18,18 @@ class Answers extends Nette\Object {
         $this->database = $database->table("answers");
     }
 
-    public function findAll(){
+    public function findAll() {
         return $this->database;
     }
+
+    public function findByQuestion($questionId) {
+        return $this->database->where("question_id", $questionId);
+    }
+    public function delete($answerId) {
+        $this->database->where($answerId)->delete();
+    }
+    public function add($values){
+        $this->database->insert($values);
+    }
+
 }

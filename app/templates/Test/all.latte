@@ -18,7 +18,7 @@
             <tbody>
                 {foreach $tests as $test}
                     <tr>
-                        <td>{$test->name}</td>
+                        <td><a n:href="Test:edit $test->id">{$test->name}</a></td>
                         <td>{$test->created_at}</td>
                         <td>{if $test->shared}Sdíleno {else} Soukromý {/if}</td>
                         <td><a n:href="Test:edit $test->id">Upravit</a></td>
