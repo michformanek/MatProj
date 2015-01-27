@@ -1,12 +1,15 @@
 {* This is the welcome page, you can delete it *}
 
 {block content}
+<noscript>
+<div class="alert alert-danger">
+    Prosím, zapněte si ve Vašem prohlížeči JavaScript. Pokud tak neuděláte, budete muset veškeré formuláře odesílat stisknutím klávesy Enter. 
+</div>
+</noscript>
+<div class="">
+    <h3>Vítejte {$user->getIdentity()->username}!</h3>
+</div>
 
 
-<ul>
-{foreach $answers as $answer}
-    <li>{$answer->text} <a n:href="handleDelete! $answer->id">smazat</a></li>
-    {/foreach}
-</ul>
-    {control answerForm-1}
+
 {/block}

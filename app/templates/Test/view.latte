@@ -2,25 +2,11 @@
 
 <div class="login-panel panel panel-default">
     <div class="panel-heading">
-        <h3 n:block=title class="panel-title">Nastavení testu</h3>
+        <h3 n:block=title class="panel-title">Parametry testu</h3>
     </div>
     <div class="panel-body">
-        <form n:name=testForm class="ajax">
-            <div class="form-group">
-                <label for="textName">Název(nadpis) testu</label>
-                <input type="text" class="form-control" id="textName" n:name=name value="{$test->name}" placeholder="Zadejte název testu" onchange="this.form.submit()">
-                <input type="hidden" class="form-control" n:name=id value="{$test->id}">
-            </div>
-            <div class="checkbox">
-                <label>
-                    {if $test->shared}
-                        <input type="checkbox" n:name=shared checked="true"> Sdílet test
-                    {else}
-                        <input type="checkbox" n:name=shared> Sdílet test
-                    {/if}
-                </label>
-            </div>
-        </form>
+        <h4>{$test->name}</h4>
+        <p>{$test->user->fullname}, {$test->created_at}</p>
     </div>
 </div>
 
@@ -32,23 +18,10 @@
     <div class="panel-body" n:snippet="questionList">
 
         {foreach $questions as $question}      
-           <div class="question">
-                <div class="text-right"><a class="ajax glyphicon glyphicon-remove" n:href="deleteQuestion! $question->id"></a></div>
-                <div>{control question-$question->id}</div>
-                {control answers-$question->id}
-            </div>
-            <hr>
+            <strong>{$question->text}</strong>
+            {control answersList-$question->id}
         {/foreach}
 
-
-        <div class="text-center">
-            <!-- Button trigger modal -->
-            <a class="ajax" n:href="addQuestion! $test->id">Doopravdy pridat otazku</a>
-
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addQuestion">
-                Přidat otázku
-            </button>
-        </div>
     </div>
 </div>
 

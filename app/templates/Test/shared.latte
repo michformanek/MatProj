@@ -16,7 +16,7 @@
             <tbody>
                 {foreach $tests as $test}
                     <tr>
-                        <td>{$test->name}</td>
+                        <td><a n:href="Test:view $test->id">{if $test->name}{$test->name}{else}Test bez názvu{/if}</a></td>
                         <td>{$test->created_at}</td>
                         <td>{$test->user->fullname}</td>
                     </tr>   

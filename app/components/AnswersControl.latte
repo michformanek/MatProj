@@ -1,10 +1,14 @@
-{* Latte template *}
-
-<div class="row">
-    <ul>
-       {* {foreach $answers as $answer}
-            <li>{$answer->text}</li>
-        {/foreach} *}
-       {$id}
-    </ul>
-</div>
+<ul n:snippet="answerList">
+    {foreach $answers as $answer}
+        <li>{$answer->text} <a class="ajax" n:href="delete! $answer->id">smaz</a></li>
+        {/foreach}
+    <li>
+        <form n:name=answerForm class="ajax form-inline">
+            <div class="form-group">
+                {* <label for="textName">Text odpovědi</label> *}
+                <input type="text" class="answer_input" id="textName" n:name=text placeholder="Zadejte text odpovědi">
+                {*   <button type="submit" class="btn btn-success" n:name="submit">Přidat</button>*}
+            </div>
+        </form>
+    </li>
+</ul>

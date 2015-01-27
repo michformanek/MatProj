@@ -15,21 +15,21 @@ class Answers extends Nette\Object {
     private $database;
 
     public function __construct(Nette\Database\Context $database) {
-        $this->database = $database->table("answers");
+        $this->database = $database;
     }
 
     public function findAll() {
-        return $this->database;
+        return $this->database->table("answers");
     }
 
-    public function findByQuestion($questionId) {
-        return $this->database->where("question_id", $questionId);
+    public function getByQuestionId($questionId) {
+        return $this->database->table("answers")->where("question_id", $questionId);
     }
     public function delete($answerId) {
-        $this->database->where($answerId)->delete();
+        $this->database->table("answers")->where('id', $answerId)->delete();
     }
     public function add($values){
-        $this->database->insert($values);
+        $this->database->table("answers")->insert($values);
     }
 
 }

@@ -15,18 +15,17 @@
                     <th>Smazat</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody n:snippet="testList">
                 {foreach $tests as $test}
                     <tr>
-                        <td><a n:href="Test:edit $test->id">{$test->name}</a></td>
+                        <td><a n:href="Test:edit $test->id">{if $test->name}{$test->name}{else}Test bez názvu{/if}</a></td>
                         <td>{$test->created_at}</td>
                         <td>{if $test->shared}Sdíleno {else} Soukromý {/if}</td>
                         <td><a n:href="Test:edit $test->id">Upravit</a></td>
-                        <td><a n:href="Test:delete $test->id">Smazat</a></td>
+                        <td><a class="ajax" n:href="deleteTest! $test->id">Smazat</a></td>
                     </tr>   
                 {/foreach}
             </tbody>
         </table>
-
     </div>
 </div>
