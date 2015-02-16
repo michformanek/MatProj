@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Presenters;
 
@@ -13,7 +13,6 @@ use Nette,
  *
  * @author Michal Formánek
  */
-
 class TestPresenter extends BasePresenter {
 
     private $tests;
@@ -59,8 +58,8 @@ class TestPresenter extends BasePresenter {
 
     public function actionCreate() {
         $test = $this->tests->add($this->user->id);
-	$values['test_id'] = $test->id;
-	$this->questions->add($values);
+        $values['test_id']=$test->id;
+        $this->questions->add($values);
         $this->redirect('Test:edit', $test->id);
     }
 
@@ -190,6 +189,7 @@ class TestPresenter extends BasePresenter {
 
         // Callback - těsně před odesláním výstupu do prohlížeče
         //$pdfRes->onBeforeComplete[] = "test";
+        
         $pdf->mPDF->OpenPrintDialog();
 
 
