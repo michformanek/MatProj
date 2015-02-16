@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Presenters;
 
@@ -13,6 +13,7 @@ use Nette,
  *
  * @author Michal Formánek
  */
+
 class TestPresenter extends BasePresenter {
 
     private $tests;
@@ -54,13 +55,12 @@ class TestPresenter extends BasePresenter {
     public function renderGenerate($testId) {
         $groups = $this->groups->getAll();
         $this->template->groups = $groups;
-
-//    dump($groups);
-        //    exit();
     }
 
     public function actionCreate() {
         $test = $this->tests->add($this->user->id);
+	$values['test_id'] = $test->id;
+	$this->questions->add($values);
         $this->redirect('Test:edit', $test->id);
     }
 
@@ -82,17 +82,12 @@ class TestPresenter extends BasePresenter {
 
     public function createComponentTestForm() {
         $form = new Form;
-
-        //$form->addText('name', 'Jméno testu');
         $form->addTextArea('name');
         $form->addCheckbox('shared', 'Sdílet test');
         $form->addSubmit('send', 'Odeslat');
         $form->addHidden('id');
-
         $form->setDefaults($this->tests->getByTestId($this->getParameter('testId')));
-
         $form->onSuccess[] = callback($this, 'testFormSubmitted');
-
         return $form;
     }
 
@@ -115,34 +110,6 @@ class TestPresenter extends BasePresenter {
             $question = new \App\Components\QuestionControl($this->questions, $testId);
             return $question;
         });
-    }
-
-    public function createComponentRandomQuestions() {
-        return new Multiplier(function ($testId) {
-            $question = new \App\Components\RandomQuestions($this->questions, $values);
-            return $question;
-        });
-    }
-
-    public function createComponentAddQuestionForm($testId) {
-
-        $form = new Form;
-
-        $form->addTextArea('text', 'Text');
-        $form->addSubmit('submit');
-        $form->addHidden('test_id', $testId);
-
-        $form->onSuccess[] = callback($this, 'questionAddFormSubmitted');
-
-        return $form;
-    }
-
-    public function questionAddFormSubmitted($form) {
-        $values = $form->getValues();
-        dump($values);
-        exit();
-        $this->questions->add($values);
-        $this->redirect('this');
     }
 
     public function testFormSubmitted($form) {
@@ -218,16 +185,11 @@ class TestPresenter extends BasePresenter {
 
         $pdf->displayZoom = "fullwidth";
 
-        // Název dokumentu
-        $pdf->documentTitle = "Nadpis stránky";
         // Dokument vytvořil:
-        $pdf->documentAuthor = "Jan Kuchař";
+        $pdf->documentAuthor = "Testovator";
 
         // Callback - těsně před odesláním výstupu do prohlížeče
         //$pdfRes->onBeforeComplete[] = "test";
-
-        $pdf->mPDF->IncludeJS("app.alert('This is alert box created by JavaScript in this PDF file!',3);");
-        $pdf->mPDF->IncludeJS("app.alert('Now opening print dialog',1);");
         $pdf->mPDF->OpenPrintDialog();
 
 

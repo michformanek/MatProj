@@ -10,12 +10,12 @@ use Nette;
 class HomepagePresenter extends BasePresenter {
 
     public function renderDefault() {
-         if (!$this->user) {
+        if (!$this->user->isLoggedIn()) {
             $this->redirect('Sign:in');
         }
         if ($this->user->isInRole('guest')) {
             $this->user->logout();
-            throw new \Nette\Application\ForbiddenRequestException;
+ 			$this->flashMessage('Nejste přihlášeni, nebo Váš účet nebyl doposud aktivován.','error');
         }
     }
 
