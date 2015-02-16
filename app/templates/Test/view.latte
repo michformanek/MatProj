@@ -26,31 +26,5 @@
 </div>
 
 <div class="row text-center">
-    <a class="btn btn-success" n:href="Test:generate" role="button">Generovat</a>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="addQuestion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Přidání otázky</h4>
-            </div>
-            <form n:name=addQuestionForm>
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <textarea class="form-control" rows="3" n:name=text></textarea>
-                        <input type="hidden" n:name=test_id value=""> 
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="reset" class="btn btn-danger">Vymazat</button>
-                    <button type="submit" class="btn btn-primary" n:name=submit>Přidat otázku</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <a class="btn btn-success" n:href="Test:generate $test->id" role="button">Generovat</a>
 </div>

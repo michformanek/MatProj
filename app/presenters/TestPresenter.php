@@ -5,7 +5,8 @@ namespace App\Presenters;
 use Nette,
     App\Model,
     Nette\Application\UI\Form,
-    Nette\Application\UI\Multiplier;
+    Nette\Application\UI\Multiplier,
+    PdfResponse\PdfResponse;
 
 /**
  * Description of TestPresenter
@@ -17,11 +18,15 @@ class TestPresenter extends BasePresenter {
     private $tests;
     private $questions;
     private $answers;
+    private $groups;
+    private $students;
 
-    public function __construct(Model\Tests $tests, Model\Questions $questions, Model\Answers $answers) {
+    public function __construct(Model\Tests $tests, Model\Questions $questions, Model\Answers $answers, Model\Groups $groups, Model\Students $students) {
         $this->tests = $tests;
         $this->questions = $questions;
         $this->answers = $answers;
+        $this->groups = $groups;
+        $this->students = $students;
     }
 
     public function renderAll() {
@@ -38,12 +43,20 @@ class TestPresenter extends BasePresenter {
     }
 
     public function renderEdit($testId) {
+        $test = $this->tests->getByTestId($testId);
+        if ($this->user->id != $test->user_id) {
+            throw new \Nette\Application\ForbiddenRequestException;
+        }
         $this->template->questions = $this->questions->getByTestId($testId);
-        $this->template->test = $this->tests->getByTestId($testId);
+        $this->template->test = $test;
     }
 
     public function renderGenerate($testId) {
-        
+        $groups = $this->groups->getAll();
+        $this->template->groups = $groups;
+
+//    dump($groups);
+        //    exit();
     }
 
     public function actionCreate() {
@@ -70,10 +83,13 @@ class TestPresenter extends BasePresenter {
     public function createComponentTestForm() {
         $form = new Form;
 
-        $form->addText('name', 'Jméno testu');
+        //$form->addText('name', 'Jméno testu');
+        $form->addTextArea('name');
         $form->addCheckbox('shared', 'Sdílet test');
         $form->addSubmit('send', 'Odeslat');
         $form->addHidden('id');
+
+        $form->setDefaults($this->tests->getByTestId($this->getParameter('testId')));
 
         $form->onSuccess[] = callback($this, 'testFormSubmitted');
 
@@ -86,12 +102,14 @@ class TestPresenter extends BasePresenter {
             return $answers;
         });
     }
+
     protected function createComponentAnswersList() {
         return new Multiplier(function ($questionId) {
             $answers = new \App\Components\AnswersListControl($this->answers, $questionId);
             return $answers;
         });
     }
+
     public function createComponentQuestion() {
         return new Multiplier(function ($testId) {
             $question = new \App\Components\QuestionControl($this->questions, $testId);
@@ -99,7 +117,15 @@ class TestPresenter extends BasePresenter {
         });
     }
 
+    public function createComponentRandomQuestions() {
+        return new Multiplier(function ($testId) {
+            $question = new \App\Components\RandomQuestions($this->questions, $values);
+            return $question;
+        });
+    }
+
     public function createComponentAddQuestionForm($testId) {
+
         $form = new Form;
 
         $form->addTextArea('text', 'Text');
@@ -122,6 +148,90 @@ class TestPresenter extends BasePresenter {
     public function testFormSubmitted($form) {
         $values = $form->getValues();
         $this->tests->update($values);
+    }
+
+    public function createComponentGenerateForm() {
+        $form = new Form;
+
+
+        $groups = $this->groups->getForTest($this->user->id);
+
+        $form->addSelect('groupBox', 'Skupina:', $groups);
+        $form->addHidden('test_id', $this->getParameter('testId'));
+        $form->addText('questionCount')->setRequired('Zadejte počet otázek');
+        $form->addText('answerCount')->setRequired('Zadejte počet odpovědí');
+        $form->addRadioList('pageFormat', 'Formát stránky', array('a4' => 'A4', 'a5' => 'A5'))
+                ->setRequired('Vyberte formát stránky');
+        $form->addTextArea('students');
+
+        $form->onSuccess[] = callback($this, 'generateFormSubmitted');
+        $form->addSubmit('submit');
+
+        return $form;
+    }
+
+    public function generateFormSubmitted($form) {
+        $values = $form->getValues();
+        $this->actionPdf($values);
+    }
+
+    function actionPdf($values) {
+        //ziskani pole studentu
+        if ($values['students']) {
+            $students = explode(",", $values['students']);
+            for ($index = 0; $index < count($students); $index++) {
+                $students[$index] = trim($students[$index]);
+            }
+        } else {
+            $students = $this->students->getByGroupId($values['groupBox'])->fetchPairs('id', 'name');
+        }
+
+        //ziskani otazek pro kazdeho studenta
+        $questions = array();
+        foreach ($students as $key => $value) {
+            $questions[$key] = $this->questions->getRandom($values['test_id'], $values['questionCount'])->fetchPairs('id', 'text');
+        }
+
+        //ziskani odpovedi pro kazdou otazku
+        $answers = array();
+        foreach ($students as $student => $studentvalue) {
+            foreach ($questions[$student] as $question => $questionvalue) {
+                $answers[$student][$question] = $this->answers->getRandom($question, $values['answerCount'])->fetchPairs('id', 'text');
+            }
+        }
+
+        $appDir = Nette\Environment::getVariable('appDir');
+        $template = $this->createTemplate()->setFile($appDir . "/templates/testPdf.latte");
+
+        $template->students = $students;
+        $template->questions= $questions;
+        $template->answers = $answers;
+        $template->values = $values;
+
+        $pdf = new PDFResponse($template);
+
+        // Všechny tyto konfigurace jsou nepovinné:
+        // Orientace stránky
+        $pdf->pageOrientaion = PDFResponse::ORIENTATION_LANDSCAPE;
+        // Formát stránky
+        $pdf->pageFormat = $values['pageFormat'];
+
+        $pdf->displayZoom = "fullwidth";
+
+        // Název dokumentu
+        $pdf->documentTitle = "Nadpis stránky";
+        // Dokument vytvořil:
+        $pdf->documentAuthor = "Jan Kuchař";
+
+        // Callback - těsně před odesláním výstupu do prohlížeče
+        //$pdfRes->onBeforeComplete[] = "test";
+
+        $pdf->mPDF->IncludeJS("app.alert('This is alert box created by JavaScript in this PDF file!',3);");
+        $pdf->mPDF->IncludeJS("app.alert('Now opening print dialog',1);");
+        $pdf->mPDF->OpenPrintDialog();
+
+
+        $pdf->send($this->getHttpRequest(), $this->getHttpResponse());
     }
 
 }

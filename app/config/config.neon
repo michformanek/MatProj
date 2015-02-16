@@ -29,5 +29,7 @@ services:
 	- App\Model\Answers
 	- App\Model\Tests
 	- App\Model\Questions
+	- App\Model\Groups
+	- App\Model\Students
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter

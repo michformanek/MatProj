@@ -1,0 +1,26 @@
+<link rel="stylesheet" type="text/css" href="{$basePath}/css/bootstrap.min.css">
+{if $values['pageFormat'] == 'a5'}
+    <link rel="stylesheet" type="text/css" href="{$basePath}/css/pdfstylea5.css">
+{else}
+    <link rel="stylesheet" type="text/css" href="{$basePath}/css/pdfstylea4.css">
+{/if}
+
+
+{foreach $students as $student => $studentValue}
+    <header>
+    <h3 class="student">{$studentValue}</h3>
+    </header>
+    <ul>
+    {foreach $questions[$student] as $question => $questionValue}
+        <li class="question">{$questionValue}</li>
+        <hr>
+        <ul>
+            {foreach $answers[$student][$question] as $answer => $answerValue}
+                <li class="answer">{$answerValue}</li>
+            {/foreach}
+        </ul>
+        <br>
+    {/foreach}
+    </ul>
+    <pagebreak />
+{/foreach}

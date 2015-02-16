@@ -65,7 +65,6 @@ class UserManager extends Nette\Object implements Nette\Security\IAuthenticator 
             self::COLUMN_NAME => $username,
             self::COLUMN_PASSWORD_HASH => Passwords::hash($password),
             self::COLUMN_EMAIL => $email,
-            self::COLUMN_ROLE => 'user',
             self::COLUMN_FULLNAME => $fullname,
         ));
     }

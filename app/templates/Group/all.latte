@@ -1,0 +1,27 @@
+{block content}
+
+<div class="login-panel panel panel-default">
+    <div class="panel-heading">
+        <h3 n:block=title class="panel-title">Vámi vytvořené skupiny</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Název skupiny</th>
+                    <th>Upravit</th>
+                    <th>Smazat</th>
+                </tr>
+            </thead>
+            <tbody n:snippet="groupList">
+                {foreach $groups as $group}
+                    <tr>
+                        <td><a n:href="Group:edit $group->id">{if $group->name}{$group->name}{else}Skupina bez názvu{/if}</a></td>
+                        <td><a n:href="Group:edit $group->id">Upravit</a></td>
+                        <td><a class="ajax" n:href="deleteGroup! $group->id">Smazat</a></td>
+                    </tr>   
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+</div>

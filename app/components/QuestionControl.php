@@ -35,7 +35,7 @@ class QuestionControl extends Control {
 
         $form->addHidden('test_id');
         $form->addHidden('id');
-        $form->addText('text', 'Text')->setRequired();
+        $form->addTextArea('text', 'Text')->setRequired();
         $form->addSubmit('submit');
         $form->setDefaults($this->questions->getById($this->questionId));
         $form->onSuccess[] = $this->questionFormSucceeded;

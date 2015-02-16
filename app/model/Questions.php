@@ -17,6 +17,9 @@ class Questions extends \Nette\Object {
     public function __construct(Nette\Database\Context $database) {
         $this->database = $database;
     }
+    public function getAll() {
+        return $this->database->table('questions');
+    }
 
     public function getByTestId($testId) {
         return $this->database->table("questions")->where("test_id", $testId);
@@ -24,6 +27,9 @@ class Questions extends \Nette\Object {
 
     public function getById($questionId) {
         return $this->database->table("questions")->get($questionId);
+    }
+    public function getRandom($testId, $limit) {
+        return $this->getByTestId($testId)->order('rand()')->limit($limit);
     }
 
     public function add($values) {

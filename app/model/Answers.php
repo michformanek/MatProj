@@ -25,10 +25,16 @@ class Answers extends Nette\Object {
     public function getByQuestionId($questionId) {
         return $this->database->table("answers")->where("question_id", $questionId);
     }
+
+    public function getRandom($questionId, $limit) {
+        return $this->getByQuestionId($questionId)->order('rand()')->limit($limit);
+    }
+
     public function delete($answerId) {
         $this->database->table("answers")->where('id', $answerId)->delete();
     }
-    public function add($values){
+
+    public function add($values) {
         $this->database->table("answers")->insert($values);
     }
 

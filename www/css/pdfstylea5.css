@@ -1,0 +1,19 @@
+/* 
+    Created on : 16.2.2015, 9:55:27
+    Author     : Michal
+*/
+
+.question{
+    list-style: decimal;
+   font-family: Helvetica, sans-serif;
+   font-weight: bold;
+}
+.answer{
+list-style: lower-alpha;
+    font-family: serif;
+}
+header{
+    width: 100%;
+    text-align: right;
+    border-bottom: 1px black;
+}

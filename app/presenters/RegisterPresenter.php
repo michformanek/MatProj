@@ -48,8 +48,8 @@ class RegisterPresenter extends BasePresenter {
         $values = $form->getValues();
         $new_user_id = $this->userManager->add($values->username,$values->fullname,$values->password,$values->email);
         if ($new_user_id) {
-            $this->flashMessage('Registrace byla úspěšná');
             $this->redirect('Sign:in');
+            $this->flashMessage('Registrace byla úspěšná, počkejte na aktivaci vašeho účtu');
         }
     }
 

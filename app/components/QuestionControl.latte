@@ -2,6 +2,6 @@
     <div class="form-group">
         <input type="hidden" n:name=test_id value="{$question->test_id}">
         <input type="hidden" n:name=id value="{$question->id}">
-        <input type="text" class="question_input" n:name=text value="{$question->text}" placeholder="Zadejte text otázky" onkeypress="this.style.width = ((this.value.lenght + 1) * 8 ) + 'px';">
+        <textarea class="question_input animated" n:name=text value="{$question->text}" placeholder="Zadejte text otázky"></textarea>
     </div>
 </form>

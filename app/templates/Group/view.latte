@@ -1,0 +1,23 @@
+{block content}
+
+<div class="login-panel panel panel-default">
+    <div class="panel-heading">
+        <h3 n:block=title class="panel-title" n:snippet="groupName">Skupina {$group->name}</h3>
+    </div>
+    <div class="panel-body">
+        <h3>{$group->name}</h3>
+    </div>
+</div>
+
+<div class="login-panel panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Členové skupiny</h3>
+    </div>
+    <div class="panel-body" n:snippet="studentsList">
+        <ul>
+            {foreach $students as $student}
+                <li>{$student->name}</li>
+            {/foreach}
+        </ul>
+    </div>
+</div>

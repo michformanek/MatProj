@@ -11,7 +11,7 @@
         <title>{ifset #title}{include title|striptags} | {/ifset}Testovator</title>
 
         <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style.css">
-        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/bootstrap.min.css">
+        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style_base.css">
         <link rel="shortcut icon" href="{$basePath}/favicon.ico">
         {block head}{/block}
     </head>
@@ -33,15 +33,25 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Testy<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a n:href="Test:all">Vaše testy</a></li>
-                                <li><a n:href="Test:shared">Sdílené testy</a></li>
-                                <li><a n:href="Test:create">Vytvořit test</a></li>
-                            </ul>
-
-                            {if $user->loggedIn}
+                        {if $user->loggedIn}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Skupiny<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a n:href="Group:all">Vaše skupiny</a></li>
+                                    <li><a n:href="Group:global">Globální skupiny</a></li>
+                                    <li><a n:href="Group:create">Vytvořit skupinu</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Testy<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a n:href="Test:all">Vaše testy</a></li>
+                                    <li><a n:href="Test:shared">Sdílené testy</a></li>
+                                    <li><a n:href="Test:create">Vytvořit test</a></li>
+                                </ul>
+                            </li>
+                        {/if}     
+                        {if $user->loggedIn}
                             <li><a n:href="Sign:out">Odhlásit</a></li>
                             {else}
                             <li><a n:href="Sign:in">Přihlásit se</a></li>
@@ -63,6 +73,7 @@
         <script src="{$basePath}/js/netteForms.js"></script>
         <script src="{$basePath}/js/nette.ajax.js"></script>
         <script src="{$basePath}/js/script.js"></script>
+        <script src="{$basePath}/js/jquery.textarea_autosize.js"></script>
         {/block}
     </body>
 </html>

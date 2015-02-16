@@ -6,8 +6,70 @@
     </div>
     <div class="panel-body">
         <div class="text-center">
-            <a class="btn btn-success" n:href="" role="button">Generovat</a>
-        </div>
-    </div>
-</div>
+            <form class="form-horizontal" n:name="generateForm">
+                <fieldset>
+
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="group">Skupina</label>
+                        <div class="col-md-4">
+                            <select class="form-control" n:name="groupBox">
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="students">Studenti</label>
+                        <div class="col-md-4">                     
+                            <textarea class="form-control animated students_textarea" id="students" name="students" n:name="students" placeholder="John Doe, Jane Doe"></textarea>
+                            <span class="help-block">Jména studentů oddělená čárkou, určeno pro jednorázové generování. V případě generování pro skupinu nechte prázdné!</span>  
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="questions">Počet otázek</label>  
+                        <div class="col-md-4">
+                            <input  n:name="questionCount" type="number" placeholder="3" class="form-control input-md" required="">
+                            <span class="help-block">Počet otázek v testu</span>  
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="answers">Počet odpovědí</label>  
+                        <div class="col-md-4">
+                            <input n:name="answerCount" type="number" placeholder="5" class="form-control input-md" required="Zadejte počet odpovědí">
+                            <span class="help-block">Počet odpovědí u každé otázky. Pukud chcete test bez odpovědí, zadejte 0. Pokud naopak chcete u každé otázky všechny možnosti, zadejte např. 999</span>  
+                        </div>
+                    </div>
+
+                    <!-- Multiple Radios -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="format">Formát stránky</label>
+                        <div class="col-md-4">
+                            {foreach $form[pageFormat]->items as $key => $label}
+                                <div class="radio">
+                                    <label for="format-0" n:name="pageFormat:$key">
+                                        <input type="radio" n:name="pageFormat:$key">
+                                        {$label}
+                                        </label>
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
+
+                                <!-- Button -->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="submit"></label>
+                                    <div class="col-md-4">
+                                        <button id="submit" name="submit" class="btn btn-success" n:name="submit">Generovat</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
 

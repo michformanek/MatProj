@@ -5,11 +5,13 @@
         <h3 n:block=title class="panel-title">Nastavení testu</h3>
     </div>
     <div class="panel-body">
-        <form n:name=testForm class="ajax">
+        <form n:name=testForm class="ajax" id="testForm">
+            <label for="textName">Název(nadpis) testu</label>
             <div class="form-group">
-                <label for="textName">Název(nadpis) testu</label>
-                <input type="text" class="form-control" id="textName" n:name=name value="{$test->name}" placeholder="Zadejte název testu" onchange="this.form.submit()">
-                <input type="hidden" class="form-control" n:name=id value="{$test->id}">
+                
+                <textarea class="question_input animated" n:name=name placeholder="Zadejte název testu" rows="1" wrap="{$test->name}">{$test->name}</textarea>
+              {*  <input type="text" class="form-control testForm" id="textName" n:name=name value="{$test->name}" placeholder="Zadejte název testu">*}
+                <input type="hidden" class="form-control testForm" n:name=id value="{$test->id}">
             </div>
             <div class="checkbox">
                 <label>
@@ -32,7 +34,7 @@
     <div class="panel-body" n:snippet="questionList">
 
         {foreach $questions as $question}      
-           <div class="question">
+            <div class="question">
                 <div class="text-right"><a class="ajax glyphicon glyphicon-remove" n:href="deleteQuestion! $question->id"></a></div>
                 <div>{control question-$question->id}</div>
                 {control answers-$question->id}
@@ -42,42 +44,11 @@
 
 
         <div class="text-center">
-            <!-- Button trigger modal -->
-            <a class="ajax" n:href="addQuestion! $test->id">Doopravdy pridat otazku</a>
-
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addQuestion">
-                Přidat otázku
-            </button>
+            <a n:href="addQuestion! $test->id" class="btn btn-success btn-circle btn-lg ajax"><i class="glyphicon glyphicon-plus"></i></a>
         </div>
     </div>
 </div>
 
 <div class="row text-center">
-    <a class="btn btn-success" n:href="Test:generate" role="button">Generovat</a>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="addQuestion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Přidání otázky</h4>
-            </div>
-            <form n:name=addQuestionForm>
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <textarea class="form-control" rows="3" n:name=text></textarea>
-                        <input type="hidden" n:name=test_id value=""> 
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="reset" class="btn btn-danger">Vymazat</button>
-                    <button type="submit" class="btn btn-primary" n:name=submit>Přidat otázku</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <a class="btn btn-success" n:href="Test:generate $test->id" role="button">Generovat</a>
 </div>

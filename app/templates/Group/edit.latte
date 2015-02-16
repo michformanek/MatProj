@@ -1,0 +1,30 @@
+{block content}
+
+<div class="login-panel panel panel-default">
+    <div class="panel-heading">
+        <h3 n:block=title class="panel-title" n:snippet="groupName">Skupina {$group->name}</h3>
+    </div>
+    <div class="panel-body">
+        <form n:name=groupForm class="ajax" id="groupForm">
+            <label>Název skupiny</label>
+            <div class="form-group">
+                <textarea class="question_input animated" n:name=name value="{$group->name}" placeholder="Zadejte název skupiny" rows="1"></textarea>
+                <input type="hidden" class="form-control" n:name=id value="{$group->id}">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="login-panel panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Členové skupiny</h3>
+    </div>
+    <div class="panel-body" n:snippet="studentsList">
+        <ul>
+            {foreach $students as $student}
+                <li>{$student->name} <a class="ajax glyphicon glyphicon-remove" n:href="deleteStudent! $student->id"></a></li>
+            {/foreach}
+            <li><form class="ajax" n:name="studentForm"><input type="text" n:name="name" placeholder="Zadejte jmeno studenta" class="answer_input"></form></li>
+        </ul>
+    </div>
+</div>
