@@ -8,21 +8,33 @@ use Nette,
     App\Model;
 
 /**
- * Description of QuestionControl
- *
- * @author Michal
+ * QuestionControl is component for updating questions in tests.
+ * 
+ * @author Michal Formánek <michformanek@gmail.com>
+ * @package default
  */
 class QuestionControl extends Control {
 
     private $questions;
     private $questionId;
 
+    /**
+     * Constructor
+     *
+     * @param model $questions questions model
+     * @param integer $questionId id of question in database
+     */
     public function __construct($questions, $questionId) {
         parent::__construct();
         $this->questions = $questions;
         $this->questionId = $questionId;
     }
 
+    /**
+     * Render method
+     * 
+     * Sets a template and its variables
+     */
     public function render() {
         $template = $this->template;
         $template->setFile(__DIR__ . '/QuestionControl.latte');
@@ -30,6 +42,11 @@ class QuestionControl extends Control {
         $template->render();
     }
 
+    /**
+     * Component factory
+     * 
+     * creates form for editing and adding questions
+     */
     public function createComponentQuestionForm() {
         $form = new Form;
 
@@ -43,6 +60,11 @@ class QuestionControl extends Control {
         return $form;
     }
 
+    /**
+     * QuestionForm callback
+     * 
+     * Updates question in database, based on values set in questionForm
+     */
     public function questionFormSucceeded($form) {
         $values = $form->getValues();
         $this->questions->update($values);

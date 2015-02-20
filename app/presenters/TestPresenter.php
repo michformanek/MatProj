@@ -9,9 +9,10 @@ use Nette,
     PdfResponse\PdfResponse;
 
 /**
- * Description of TestPresenter
- *
- * @author Michal Formánek
+ * Test Presenter
+ * 
+ * @author Michal Formánek <michformanek@gmail.com>
+ * @package default
  */
 class TestPresenter extends BasePresenter {
 
@@ -21,6 +22,15 @@ class TestPresenter extends BasePresenter {
     private $groups;
     private $students;
 
+    /**
+     * Constructor
+     * 
+     * @param \App\Model\Tests $tests 
+     * @param \App\Model\Questions $questions
+     * @param \App\Model\Answers $answers
+     * @param \App\Model\Groups $groups
+     * @param \App\Model\Students $students
+     */
     public function __construct(Model\Tests $tests, Model\Questions $questions, Model\Answers $answers, Model\Groups $groups, Model\Students $students) {
         $this->tests = $tests;
         $this->questions = $questions;
@@ -29,19 +39,36 @@ class TestPresenter extends BasePresenter {
         $this->students = $students;
     }
 
+    /**
+     * Render method
+     */
     public function renderAll() {
         $this->template->tests = $this->tests->getByUser($this->user->getId());
     }
 
+    /**
+     * Render method
+     */
     public function renderShared() {
         $this->template->tests = $this->tests->getShared();
     }
 
+    /**
+     * Render method
+     * 
+     * @param int $testId id of test to be displayed
+     */
     public function renderView($testId) {
         $this->template->questions = $this->questions->getByTestId($testId);
         $this->template->test = $this->tests->getByTestId($testId);
     }
 
+    /**
+     * Render method
+     * 
+     * @param int $testId id of test to be edited
+     * @throws \Nette\Application\ForbiddenRequestException
+     */
     public function renderEdit($testId) {
         $test = $this->tests->getByTestId($testId);
         if ($this->user->id != $test->user_id) {
@@ -51,34 +78,62 @@ class TestPresenter extends BasePresenter {
         $this->template->test = $test;
     }
 
+    /**
+     * Render method
+     * 
+     * @param int $testId id of test to be generated
+     */
     public function renderGenerate($testId) {
         $groups = $this->groups->getAll();
         $this->template->groups = $groups;
     }
 
+    /**
+     * Creates new test, redirects to Test:edit
+     */
     public function actionCreate() {
         $test = $this->tests->add($this->user->id);
-        $values['test_id']=$test->id;
+        $values['test_id'] = $test->id;
         $this->questions->add($values);
         $this->redirect('Test:edit', $test->id);
     }
 
+    /**
+     * Adds question to test
+     * 
+     * @param int $testId id of test
+     */
     public function handleAddQuestion($testId) {
         $values = array('test_id' => $testId);
         $this->questions->add($values);
         $this->redrawControl('questionList');
     }
 
+    /**
+     * Removes test and updates test list
+     * 
+     * @param int $testId id of test
+     */
     public function handleDeleteTest($testId) {
         $this->tests->delete($testId);
         $this->redrawControl('testList');
     }
 
+    /**
+     * Removes question and all its answers from test
+     * 
+     * @param int $questionId 
+     */
     public function handleDeleteQuestion($questionId) {
         $this->questions->delete($questionId);
         $this->redrawControl('questionList');
     }
 
+    /**
+     * Component factory
+     * 
+     * @return Form
+     */
     public function createComponentTestForm() {
         $form = new Form;
         $form->addTextArea('name');
@@ -90,6 +145,11 @@ class TestPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * Creates control AnswersControl for each question
+     *  
+     * @return Multiplier
+     */
     protected function createComponentAnswers() {
         return new Multiplier(function ($questionId) {
             $answers = new \App\Components\AnswersControl($this->answers, $questionId);
@@ -97,6 +157,11 @@ class TestPresenter extends BasePresenter {
         });
     }
 
+    /**
+     * Creates control AnswersListControl for each question
+     *  
+     * @return Multiplier
+     */
     protected function createComponentAnswersList() {
         return new Multiplier(function ($questionId) {
             $answers = new \App\Components\AnswersListControl($this->answers, $questionId);
@@ -104,6 +169,11 @@ class TestPresenter extends BasePresenter {
         });
     }
 
+    /**
+     * Creates control QuestionControl for each question in test
+     *  
+     * @return Multiplier
+     */
     public function createComponentQuestion() {
         return new Multiplier(function ($testId) {
             $question = new \App\Components\QuestionControl($this->questions, $testId);
@@ -111,11 +181,21 @@ class TestPresenter extends BasePresenter {
         });
     }
 
+    /**
+     * Test form callback
+     * 
+     * @param Nette\Application\UI\Form $form testForm
+     */
     public function testFormSubmitted($form) {
         $values = $form->getValues();
         $this->tests->update($values);
     }
 
+    /**
+     * Creates component generate form
+     * 
+     * @return Form
+     */
     public function createComponentGenerateForm() {
         $form = new Form;
 
@@ -136,11 +216,22 @@ class TestPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * Generate form callback
+     * calls actionPdf method to create test
+     * 
+     * @param Nette\Application\UI\Form $form component generateForm
+     */
     public function generateFormSubmitted($form) {
         $values = $form->getValues();
         $this->actionPdf($values);
     }
 
+    /**
+     * Creates test in .pfd format
+     * 
+     * @param array $values values
+     */
     function actionPdf($values) {
         //ziskani pole studentu
         if ($values['students']) {
@@ -170,7 +261,7 @@ class TestPresenter extends BasePresenter {
         $template = $this->createTemplate()->setFile($appDir . "/templates/testPdf.latte");
 
         $template->students = $students;
-        $template->questions= $questions;
+        $template->questions = $questions;
         $template->answers = $answers;
         $template->values = $values;
 
@@ -189,7 +280,7 @@ class TestPresenter extends BasePresenter {
 
         // Callback - těsně před odesláním výstupu do prohlížeče
         //$pdfRes->onBeforeComplete[] = "test";
-        
+
         $pdf->mPDF->OpenPrintDialog();
 
 

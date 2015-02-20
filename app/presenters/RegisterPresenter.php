@@ -7,22 +7,35 @@ use Nette,
     Nette\Application\UI\Form;
 
 /**
- * Description of Register
+ * Register presenter
  *
- * @author Michal Formánek
+ * @author Michal Formánek <michformanek@gmail.com>
  */
 class RegisterPresenter extends BasePresenter {
 
     private $userManager;
 
+    /**
+     * Constructor
+     * 
+     * @param \App\Model\UserManager $userManager
+     */
     public function __construct(Model\UserManager $userManager) {
         $this->userManager = $userManager;
     }
 
+    /**
+     * Render method
+     */
     public function renderDefault() {
         
     }
 
+    /**
+     * Register-form factory
+     * 
+     * @return Form
+     */
     public function createComponentRegisterForm() {
         $form = new Form;
         $form->addText('username', 'Uživatelské jméno');
@@ -44,9 +57,14 @@ class RegisterPresenter extends BasePresenter {
         return $form;
     }
 
+    /**
+     * Register form callback
+     * 
+     * @param type $form
+     */
     public function registerFormSubmitted($form) {
         $values = $form->getValues();
-        $new_user_id = $this->userManager->add($values->username,$values->fullname,$values->password,$values->email);
+        $new_user_id = $this->userManager->add($values->username, $values->fullname, $values->password, $values->email);
         if ($new_user_id) {
             $this->redirect('Sign:in');
             $this->flashMessage('Registrace byla úspěšná, počkejte na aktivaci vašeho účtu');
